@@ -2759,6 +2759,93 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
   .dash-greeting-stat:last-child { grid-column: 1 / -1; }
 }
 
+/* ══ Mobile Dashboard Layout (≤768px) ══ */
+@media (max-width: 768px) {
+  /* Greeting hero — lebih compact */
+  .dash-greeting {
+    padding: 1rem 1rem 1rem;
+    border-radius: 0 0 1rem 1rem;
+  }
+  .dash-greeting-top {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .dash-greeting-wave { font-size: 1.2rem; }
+  .dash-greeting-title { font-size: 1.1rem; }
+  .dash-greeting-sub   { font-size: 0.78rem; }
+  .dash-greeting-msg   {
+    font-size: 0.78rem;
+    padding: 0.6rem 0.75rem;
+    margin-top: 0.5rem;
+  }
+  /* Month badge di sudut kanan — tetap ada */
+  .dash-greeting-month-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  /* Stats bar di bawah greeting — 3 kolom di mobile */
+  .dash-greeting-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .dash-greeting-stat-label { font-size: 0.6rem; }
+  .dash-greeting-stat-val   { font-size: 0.9rem; }
+
+  /* Health Score — stack vertikal, ring tetap ada tapi kecil */
+  .health-score-banner {
+    flex-wrap: wrap;
+    padding: 0.9rem 1rem;
+    gap: 0.75rem;
+  }
+  .health-score-left { min-width: 0; flex: 1; }
+  .health-score-val  { font-size: 2rem; }
+  .health-score-grade { font-size: 0.78rem; }
+  .health-score-ring {
+    display: flex;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+  }
+  .health-score-ring svg { width: 64px; height: 64px; }
+  .health-score-tips {
+    min-width: 100%;
+    gap: 0.4rem;
+  }
+  .health-tip {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  /* Sticker — compact row */
+  #finance-sticker-area .sticker-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.9rem;
+  }
+  #finance-sticker-area .sticker-img-wrap { width: 52px; height: 52px; flex-shrink: 0; }
+  #finance-sticker-area .sticker-img     { width: 52px; height: 52px; }
+  #finance-sticker-area .sticker-card-title { font-size: 0.82rem; }
+  #finance-sticker-area .sticker-card-desc  { font-size: 0.72rem; }
+  #finance-sticker-area .sticker-ocean-icon { font-size: 1.5rem; }
+
+  /* Summary cards — 2 kolom di mobile */
+  .summary-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 0.75rem 0.9rem;
+  }
+  .summary-card { padding: 0.75rem 0.85rem; }
+  .summary-card-val  { font-size: 1rem; }
+  .summary-card-label { font-size: 0.62rem; }
+
+  /* Category status bars — full width, teks lebih kecil */
+  .cat-bar-header { flex-wrap: wrap; gap: 0.2rem; }
+  .cat-bar-label  { font-size: 0.78rem; }
+  .cat-bar-vals   { font-size: 0.72rem; }
+}
+
 /* ══════════════════════════════════════════
    CHART — warna dinamis dari CSS var per tema
    Hack: Chart.js pakai CSS custom properties
@@ -2936,16 +3023,16 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 }
 
 .topbar-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
+  position: fixed;
+  top: 0; /* akan di-override oleh JS */
+  left: 0; /* akan di-override oleh JS */
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 6px;
   min-width: 200px;
   box-shadow: var(--shadow-lg);
-  z-index: 300;
+  z-index: 9999;
   display: none;
   animation: dropdownIn 0.15s ease;
 }
@@ -3747,10 +3834,10 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 /* Dropdown Anggaran */
 .topbar-tab-dropdown-wrap { position: relative; display: inline-flex; flex-shrink: 0; }
 .topbar-dropdown {
-  position: absolute; top: calc(100% + 8px); left: 0;
+  position: fixed; top: 0; left: 0; /* di-override JS */
   background: var(--bg-elevated); border: 1px solid var(--border);
   border-radius: 12px; padding: 6px; min-width: 200px;
-  box-shadow: var(--shadow-lg); z-index: 300;
+  box-shadow: var(--shadow-lg); z-index: 9999;
   display: none; animation: dropdownIn 0.15s ease;
 }
 .topbar-dropdown.open { display: block; }
