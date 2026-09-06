@@ -31,58 +31,44 @@ function renderSavingsPage() {
 
   const el = $('page-savings'); if (!el) return;
   el.innerHTML = `
-    <!-- Summary Cards -->
     <div class="summary-cards-grid">
-      ${summaryCard('Nabung Bersih Bulan Ini', fmt(nabungBersih), targetBulanIni > 0 ? `${Math.round((nabungBersih/targetBulanIni)*100)}%` : '—', nabungBersih >= targetBulanIni && targetBulanIni > 0 ? 'up' : '', monthLabel(month))}
-      ${summaryCard('Ditarik Bulan Ini', fmt(ditarik), ditarik > 0 ? '▼' : '—', ditarik > 0 ? 'down' : '', 'penarikan')}
-      ${summaryCard('Total Tabungan (Semua Waktu)', fmt(totalTabungan), '', '', `${goals.length} tujuan aktif`)}
-      ${summaryCard('Total Target', fmt(totalTarget), '', '', `${goals.length} tujuan aktif`)}
+      ${summaryCard('Nabung Bersih', fmt(nabungBersih), targetBulanIni > 0 ? `${Math.round((nabungBersih/targetBulanIni)*100)}%` : '—', nabungBersih >= targetBulanIni && targetBulanIni > 0 ? 'up' : '', monthLabel(month))}
+      ${summaryCard('Ditarik', fmt(ditarik), ditarik > 0 ? '▼' : '—', ditarik > 0 ? 'down' : '', 'bulan ini')}
+      ${summaryCard('Total Tabungan', fmt(totalTabungan), '', '', `${goals.length} tujuan`)}
+      ${summaryCard('Total Target', fmt(totalTarget), '', '', '')}
     </div>
-
-    <!-- Target Nabung Bulan Ini -->
-    <div class="glass-card section-card">
-      <div class="section-header-row">
-        <h2 class="section-title">🎯 Target Nabung Bulan Ini</h2>
-        <button class="btn btn-ghost btn-sm" onclick="openGoalTargetSettings()">⚙️ Atur</button>
+    <div class="tab-page-grid">
+      <!-- Half: Target + Goals list -->
+      <div class="glass-card section-card">
+        <div class="section-header-row">
+          <h2 class="section-title">Target Bulan Ini</h2>
+          <button class="btn btn-ghost btn-sm" onclick="openGoalTargetSettings()">⚙️</button>
+        </div>
+        ${renderSavingsTargetBar(nabungBersih, targetBulanIni)}
+        <h2 class="section-title" style="margin-top:1rem">Tujuan Tabungan</h2>
+        <div id="savings-goals-list">${renderSavingsGoalsList(goals)}</div>
       </div>
-      ${renderSavingsTargetBar(nabungBersih, targetBulanIni)}
-    </div>
-
-    <!-- Tujuan Tabungan -->
-    <div class="glass-card section-card">
-      <div class="section-header-row">
-        <h2 class="section-title">💰 Tujuan Tabungan <span style="font-size:1.2rem">🐷</span></h2>
+      <!-- Half: Donut chart -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Tabungan per Tujuan</h2>
+        <canvas id="savings-donut-chart" height="200"></canvas>
+        <div id="savings-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
       </div>
-      <div id="savings-goals-list">
-        ${renderSavingsGoalsList(goals)}
+      <!-- Half: Form Tujuan Baru -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">+ Tujuan Baru</h2>
+        ${renderNewGoalForm(s)}
       </div>
-    </div>
-
-    <!-- Form Tujuan Baru -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">+ Tujuan Baru</h2>
-      ${renderNewGoalForm(s)}
-    </div>
-
-    <!-- Form Catat Tabungan -->
-    <div class="glass-card section-card" id="savings-form-card">
-      <h2 class="section-title">🐷 Catat Tabungan Bulan Ini</h2>
-      ${renderSavingsForm(s, goals)}
-    </div>
-
-    <!-- Donut Chart per Tujuan -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Tabungan per Tujuan (Bulan Ini)</h2>
-      <div class="chart-donut-wrap">
-        <canvas id="savings-donut-chart" height="220"></canvas>
-        <div id="savings-donut-legend" class="donut-legend"></div>
+      <!-- Half: Form Catat -->
+      <div class="glass-card section-card" id="savings-form-card">
+        <h2 class="section-title">Catat Tabungan</h2>
+        ${renderSavingsForm(s, goals)}
       </div>
-    </div>
-
-    <!-- Riwayat -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Riwayat Tabungan Bulan Ini</h2>
-      <div id="savings-history-list"></div>
+      <!-- Full: Riwayat -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Riwayat Tabungan Bulan Ini</h2>
+        <div id="savings-history-list"></div>
+      </div>
     </div>
   `;
 
@@ -283,7 +269,8 @@ function renderSavingsCharts(txs) {
     return g ? g.name : '—';
   });
   const catVals = Object.values(goalMap);
-  const colors  = ['#38bdf8','#34d399','#c084fc','#fbbf24','#f87171','#fb923c'];
+  const themeC = getThemeColors();
+  const colors = [themeC[0], themeC[1], themeC[2], themeC[3], themeC[4], themeC[5]];
 
   const donutCtx = $('savings-donut-chart');
   if (donutCtx) {
