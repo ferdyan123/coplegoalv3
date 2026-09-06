@@ -35,11 +35,93 @@ function initApp() {
     });
   }
 
-  /* Nav items */
+  /* ── Legacy sidebar nav ── */
   $$('.nav-item').forEach(btn =>
     btn.addEventListener('click', () => navigateTo(btn.dataset.page)));
 
-  /* Mobile menu */
+  /* ── Topbar nav tabs ── */
+  $$('.topbar-tab[data-page]').forEach(btn =>
+    btn.addEventListener('click', () => navigateTo(btn.dataset.page)));
+
+  /* ── Topbar logo → dashboard ── */
+  $('topbar-logo-btn')?.addEventListener('click', () => navigateTo('dashboard'));
+
+  /* ── Anggaran dropdown (topbar desktop) ── */
+  const anggaranBtn  = $('tnav-anggaran');
+  const anggaranDrop = $('anggaran-dropdown');
+  if (anggaranBtn && anggaranDrop) {
+    anggaranBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = anggaranDrop.classList.contains('open');
+      anggaranDrop.classList.toggle('open', !isOpen);
+      anggaranBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    anggaranDrop.querySelectorAll('.topbar-dropdown-item[data-page]').forEach(item => {
+      item.addEventListener('click', () => {
+        navigateTo(item.dataset.page);
+        anggaranDrop.classList.remove('open');
+        anggaranBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', e => {
+      const wrap = $('anggaran-dropdown-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        anggaranDrop.classList.remove('open');
+        anggaranBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* ── Bottom nav ── */
+  $$('.bottom-tab[data-page]').forEach(btn =>
+    btn.addEventListener('click', () => navigateTo(btn.dataset.page)));
+
+  $('bnav-add')?.addEventListener('click', () => openAddTransaction());
+
+  function openSheet(sheetId, overlayId) {
+    $(sheetId)?.classList.add('open');
+    $(overlayId)?.classList.add('show');
+  }
+  function closeSheet(sheetId, overlayId) {
+    $(sheetId)?.classList.remove('open');
+    $(overlayId)?.classList.remove('show');
+  }
+
+  /* Bottom tab Anggaran → sheet */
+  $('bnav-anggaran-trigger')?.addEventListener('click', () => openSheet('anggaran-sheet', 'anggaran-sheet-overlay'));
+  $('anggaran-sheet-overlay')?.addEventListener('click', () => closeSheet('anggaran-sheet', 'anggaran-sheet-overlay'));
+  $$('#anggaran-sheet .bottom-sheet-item[data-page]').forEach(item => {
+    item.addEventListener('click', () => {
+      navigateTo(item.dataset.page);
+      closeSheet('anggaran-sheet', 'anggaran-sheet-overlay');
+    });
+  });
+
+  /* Bottom tab Lainnya → sheet */
+  $('bnav-more')?.addEventListener('click', () => openSheet('more-sheet', 'more-sheet-overlay'));
+  $('more-sheet-overlay')?.addEventListener('click', () => closeSheet('more-sheet', 'more-sheet-overlay'));
+  $$('#more-sheet .bottom-sheet-item[data-page]').forEach(item => {
+    item.addEventListener('click', () => {
+      navigateTo(item.dataset.page);
+      closeSheet('more-sheet', 'more-sheet-overlay');
+    });
+  });
+
+  $('bsheet-settings')?.addEventListener('click', () => {
+    openSettings();
+    closeSheet('more-sheet', 'more-sheet-overlay');
+  });
+
+  $('bsheet-theme')?.addEventListener('click', () => {
+    toggleTheme();
+    const label = $('bsheet-theme-label');
+    if (label) {
+      const icons = { dark:'🖤 Drako', yuki:'❄️ Yuki', rose:'🩷 Pupi', ocean:'🌊 Ocean' };
+      label.textContent = icons[state.settings.theme] || 'Tema';
+    }
+  });
+
+  /* ── Mobile hamburger (sidebar legacy) ── */
   $('menu-toggle')?.addEventListener('click', () => {
     $('sidebar').classList.toggle('open');
     sidebarOverlay.classList.toggle('show');
