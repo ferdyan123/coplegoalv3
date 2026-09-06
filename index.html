@@ -1073,7 +1073,11 @@
       </section>
 
       <!-- ── BUDGET CATEGORY PAGES ── -->
-      <section id="page-income" class="page"></section>
+      <section id="page-income" class="page" aria-label="Pemasukan">
+        <div class="page-header"><div><h1 class="page-title">💼 Pemasukan</h1><p class="page-subtitle">Income</p></div><button class="btn btn-primary add-item-btn" data-category="income" id="add-income-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="income-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="income-table"></div>
+      </section>
       <section id="page-fixed" class="page" aria-label="Pengeluaran Tetap">
         <div class="page-header"><div><h1 class="page-title">🏠 Pengeluaran Tetap</h1><p class="page-subtitle">Fixed Expenses</p></div><button class="btn btn-primary add-item-btn" data-category="fixed" id="add-fixed-btn">+ Anggaran</button></div>
         <div class="category-summary-bar" id="fixed-summary-bar"></div>
@@ -1089,11 +1093,19 @@
         <div class="category-summary-bar" id="loan-summary-bar"></div>
         <div class="budget-table-wrap glass-card" id="loan-table"></div>
       </section>
-      <section id="page-savings" class="page"></section>
-      <section id="page-investments" class="page"></section>
+      <section id="page-savings" class="page" aria-label="Tabungan">
+        <div class="page-header"><div><h1 class="page-title">🐷 Tabungan</h1><p class="page-subtitle">Savings</p></div><button class="btn btn-primary add-item-btn" data-category="savings" id="add-savings-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="savings-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="savings-table"></div>
+      </section>
+      <section id="page-investments" class="page" aria-label="Investasi">
+        <div class="page-header"><div><h1 class="page-title">📈 Investasi</h1><p class="page-subtitle">Investments</p></div><button class="btn btn-primary add-item-btn" data-category="investments" id="add-investments-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="investments-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="investments-table"></div>
+      </section>
+
       <section id="page-expense" class="page"></section>
       <section id="page-debt" class="page"></section>
-
     </main>
   </div>
 </div>
