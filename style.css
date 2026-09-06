@@ -2291,68 +2291,87 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 /* ═══════════════════════════════════════════════════════════
    COUPLEGOAL — NEW TAB STYLES (income, expense, savings, debt, investments)
+   Layout compact sesuai dashboard — desktop 2-col, mobile 1-col
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Page inner padding (new tab pages) ── */
-.page > .summary-cards-grid,
-.page > .glass-card,
-.page > .top-cat-card,
-.page > .debt-section-header {
-  margin-left: 1rem;
-  margin-right: 1rem;
+/* ── Page wrapper baru — pakai padding yang sama dengan dashboard ── */
+#page-income, #page-expense, #page-savings,
+#page-debt, #page-investments {
+  padding: 0;
 }
 
-/* ── Summary Cards Grid ── */
+/* ── Dua kolom di desktop untuk section cards ── */
+.tab-page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem 1.5rem;
+}
+@media (min-width: 900px) {
+  .tab-page-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tab-page-grid .tab-full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Summary Cards Grid — identik dengan dashboard summary-grid ── */
 .summary-cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
 }
 @media (min-width: 768px) {
-  .summary-cards-grid { grid-template-columns: repeat(4, 1fr); padding: 1.5rem; }
+  .summary-cards-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .summary-card {
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  border-radius: var(--r-lg);
+  border-bottom: 2px solid var(--accent);
 }
-.summary-card-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
-.summary-card-val   { font-size: 1.1rem; font-weight: 700; color: var(--text); }
-.summary-card-badge { font-size: 0.75rem; margin-top: 0.25rem; }
-.summary-card-sub   { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; }
+.summary-card:nth-child(2) { border-bottom-color: var(--accent-2); }
+.summary-card:nth-child(3) { border-bottom-color: var(--accent-3); }
+.summary-card:nth-child(4) { border-bottom-color: var(--accent-soft); }
+.summary-card-label { font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.3rem; font-weight: 600; opacity: 0.8; }
+.summary-card-val   { font-size: 1.2rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-num); }
+.summary-card-badge { font-size: 0.72rem; margin-top: 0.2rem; font-weight: 600; }
+.summary-card-sub   { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
 
 /* ── Top Category Card ── */
 .top-cat-card {
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.85rem 1.25rem; margin: 0 1rem 0.75rem;
-  border-radius: 12px;
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.65rem 1.5rem;
+  margin: 0;
 }
-.top-cat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.top-cat-val   { font-size: 1rem; font-weight: 700; color: var(--text); flex: 1; }
-.top-cat-amt   { font-size: 0.85rem; color: var(--text-muted); }
+.top-cat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.top-cat-val   { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); flex: 1; }
+.top-cat-amt   { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
 
-/* ── Section Card ── */
+/* ── Section Card — compact glass card ── */
 .section-card {
-  margin: 0 1rem 1rem;
-  padding: 1.25rem;
-  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-lg);
+  margin: 0;
 }
 .section-title {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--text);
+  margin-bottom: 0.85rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 .section-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-top: -0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: -0.65rem;
+  margin-bottom: 0.65rem;
 }
 .section-header-row {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 .section-header-row .section-title { margin-bottom: 0; }
 
