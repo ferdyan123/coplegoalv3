@@ -29,15 +29,13 @@ function getThemeColors() {
   const a  = getCSSVar('--accent');
   const a2 = getCSSVar('--accent-2');
   const a3 = getCSSVar('--accent-3');
-  // 6 kategori: income, fixed, variable, loan, savings, investments
-  // Pakai variasi opacity/shade dari 3 accent utama
+  // 5 kategori baru: income, expense, savings, debt, investments
   return [
-    a,                                    // income    → accent utama
-    a2,                                   // fixed     → accent-2
-    a3,                                   // variable  → accent-3
-    a + 'cc',                             // loan      → accent redup
-    a2 + '99',                            // savings   → accent-2 muda
-    a3 + 'cc',                            // investments → accent-3 redup
+    a,           // income      → accent utama
+    a3,          // expense     → accent-3 (merah/warning)
+    a2,          // savings     → accent-2 (hijau/positif)
+    a + 'cc',    // debt        → accent redup
+    a2 + '99',   // investments → accent-2 muda
   ];
 }
 
@@ -336,23 +334,40 @@ function renderPersonBreakdown() {
 }
 
 function renderCategoryStatusBars() {
-  const colors = getThemeColors(); // 6 warna dari tema aktif
-  $('category-status-bars').innerHTML = CATEGORIES.map((c, i) => {
-    const budget = calcBudget(c.key);
-    const actual = calcActual(c.key);
-    const pct    = budget > 0 ? Math.min((actual / budget) * 100, 120) : 0;
-    const over   = actual > budget && budget > 0;
+  const colors = getThemeColors(); // 5 warna kategori baru
+
+  // Pengeluaran = gabungan fixed + variable + loan
+  const expenseBudget = calcTotalBudget(EXPENSE_CATEGORIES);
+  const expenseActual = calcTotalActual(EXPENSE_CATEGORIES);
+
+  // Hutang & Piutang dari state.debts
+  const debtTotal    = (state.debts || []).filter(d => d.type === 'hutang').reduce((s, d) => s + (d.sisaHutang || 0), 0);
+  const piutangTotal = (state.debts || []).filter(d => d.type === 'piutang').reduce((s, d) => s + (d.sisaHutang || 0), 0);
+
+  const NEW_CATEGORIES = [
+    { icon: '💼', label: 'Pemasukan',       budget: calcBudget('income'),      actual: calcActual('income'),      note: null },
+    { icon: '🛒', label: 'Pengeluaran',      budget: expenseBudget,             actual: expenseActual,            note: null },
+    { icon: '🐷', label: 'Tabungan',         budget: calcBudget('savings'),     actual: calcActual('savings'),     note: null },
+    { icon: '💳', label: 'Hutang & Piutang', budget: debtTotal + piutangTotal,  actual: debtTotal,                note: piutangTotal > 0 ? `Piutang: ${fmt(piutangTotal)}` : null },
+    { icon: '📈', label: 'Investasi',         budget: calcBudget('investments'), actual: calcActual('investments'), note: null },
+  ];
+
+  $('category-status-bars').innerHTML = NEW_CATEGORIES.map((c, i) => {
+    const budget   = c.budget;
+    const actual   = c.actual;
+    const pct      = budget > 0 ? Math.min((actual / budget) * 100, 120) : 0;
+    const over     = actual > budget && budget > 0;
     const barColor = over ? 'var(--accent-3)' : (colors[i] || 'var(--accent)');
+    const noteHtml = c.note ? ` · <span style="color:var(--accent-2);font-size:0.75em;">${c.note}</span>` : '';
     return `<div class="cat-bar-item">
       <div class="cat-bar-header">
         <span class="cat-bar-label">${c.icon} ${c.label}</span>
-        <span class="cat-bar-vals">${fmt(actual)} / ${fmt(budget)} <span style="color:${over ? 'var(--accent-3)' : 'var(--text-muted)'};">${over ? '▲ OVER' : ''}</span></span>
+        <span class="cat-bar-vals">${fmt(actual)} / ${fmt(budget)}${noteHtml} <span style="color:${over ? 'var(--accent-3)' : 'var(--text-muted)'};">${over ? '▲ OVER' : ''}</span></span>
       </div>
       <div class="progress-track"><div class="progress-fill ${over ? 'over' : ''}" style="width:${Math.min(pct,100)}%;background:${barColor};"></div></div>
     </div>`;
   }).join('');
 }
-
 function renderRecentTransactions() {
   const month = state.settings.month;
   const txs = [...state.transactions]
