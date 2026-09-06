@@ -52,97 +52,74 @@ function renderDebtPage() {
 
   const el = $('page-debt'); if (!el) return;
   el.innerHTML = `
-    <!-- ═══ BAGIAN HUTANG ═══ -->
-    <div class="debt-section-header">
-      <h2 class="debt-section-title">💳 Hutang</h2>
+    <!-- HUTANG section -->
+    <div style="padding:0.75rem 1.5rem 0;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">💳 Hutang</div>
+    <div class="summary-cards-grid" style="padding-top:0.5rem">
+      ${summaryCard('Bayar Hutang Bulan Ini', fmt(totalHutangBulanIni), '', '', monthLabel(month))}
+      ${summaryCard('Sisa Hutang Total', fmt(hutangs.reduce((s, d) => s + calcSisaHutang(d), 0)), '', '', `${hutangs.length} rencana`)}
     </div>
-
-    <div class="summary-cards-grid" style="grid-template-columns:repeat(2,1fr)">
-      ${summaryCard('Total Hutang Bulan Ini', fmt(totalHutangBulanIni), '', '', monthLabel(month))}
-      ${summaryCard('Sisa Hutang Keseluruhan', fmt(hutangs.reduce((s, d) => s + calcSisaHutang(d), 0)), '', '', `${hutangs.length} rencana aktif`)}
-    </div>
-
-    <!-- Budget Hutang -->
-    <div class="glass-card section-card">
-      <div class="section-header-row">
-        <h2 class="section-title">💰 Budget Hutang Bulan Ini</h2>
-        <button class="btn btn-ghost btn-sm" onclick="navigateTo('transactions')">⚙️ Atur</button>
+    <div class="tab-page-grid">
+      <!-- Full: Budget -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Budget Hutang Bulan Ini</h2>
+        ${renderDebtBudgetBar(totalHutangBulanIni, budgetHutang)}
       </div>
-      ${renderDebtBudgetBar(totalHutangBulanIni, budgetHutang)}
-    </div>
-
-    <!-- Rencana Pelunasan -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Rencana Pelunasan Hutang</h2>
-      <div id="debt-plans-list">
-        ${renderDebtPlansList(hutangs)}
+      <!-- Half: Rencana list -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Rencana Pelunasan</h2>
+        <div id="debt-plans-list">${renderDebtPlansList(hutangs)}</div>
       </div>
-    </div>
-
-    <!-- Form Rencana Hutang Baru -->
-    <div class="glass-card section-card" id="debt-plan-form-card">
-      <h2 class="section-title">+ Rencana Hutang Baru</h2>
-      ${renderDebtPlanForm('hutang')}
-    </div>
-
-    <!-- Form Catat Bayar Hutang -->
-    <div class="glass-card section-card" id="debt-pay-form-card">
-      <h2 class="section-title">💳 Hutang — Tambah</h2>
-      ${renderDebtPayForm('hutang', hutangs)}
-    </div>
-
-    <!-- Donut Hutang -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Breakdown Kategori Hutang</h2>
-      <div class="chart-donut-wrap">
-        <canvas id="debt-donut-chart" height="200"></canvas>
-        <div id="debt-donut-legend" class="donut-legend"></div>
+      <!-- Half: Donut hutang -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Breakdown Hutang</h2>
+        <canvas id="debt-donut-chart" height="180"></canvas>
+        <div id="debt-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
+      </div>
+      <!-- Half: Form rencana baru -->
+      <div class="glass-card section-card" id="debt-plan-form-card">
+        <h2 class="section-title">+ Rencana Hutang Baru</h2>
+        ${renderDebtPlanForm('hutang')}
+      </div>
+      <!-- Half: Form bayar -->
+      <div class="glass-card section-card" id="debt-pay-form-card">
+        <h2 class="section-title">Catat Bayar Hutang</h2>
+        ${renderDebtPayForm('hutang', hutangs)}
       </div>
     </div>
 
-    <!-- ═══ BAGIAN PIUTANG ═══ -->
-    <div class="debt-section-header" style="margin-top:2rem">
-      <h2 class="debt-section-title">🤝 Piutang</h2>
+    <!-- PIUTANG section -->
+    <div style="padding:1rem 1.5rem 0;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">🤝 Piutang</div>
+    <div class="summary-cards-grid" style="padding-top:0.5rem">
+      ${summaryCard('Terima Piutang Bulan Ini', fmt(totalPiutangBulanIni), '', '', monthLabel(month))}
+      ${summaryCard('Sisa Piutang Total', fmt(piutangs.reduce((s, d) => s + calcSisaPiutang(d), 0)), '', '', `${piutangs.length} rencana`)}
     </div>
-
-    <div class="summary-cards-grid" style="grid-template-columns:repeat(2,1fr)">
-      ${summaryCard('Total Piutang Bulan Ini', fmt(totalPiutangBulanIni), '', '', monthLabel(month))}
-      ${summaryCard('Sisa Piutang Keseluruhan', fmt(piutangs.reduce((s, d) => s + calcSisaPiutang(d), 0)), '', '', `${piutangs.length} rencana aktif`)}
-    </div>
-
-    <!-- Rencana Penerimaan Piutang -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Rencana Penerimaan Piutang</h2>
-      <div id="piutang-plans-list">
-        ${renderPiutangPlansList(piutangs)}
+    <div class="tab-page-grid">
+      <!-- Half: Rencana piutang -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Rencana Penerimaan</h2>
+        <div id="piutang-plans-list">${renderPiutangPlansList(piutangs)}</div>
       </div>
-    </div>
-
-    <!-- Form Rencana Piutang Baru -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">+ Rencana Piutang Baru</h2>
-      ${renderDebtPlanForm('piutang')}
-    </div>
-
-    <!-- Form Catat Piutang -->
-    <div class="glass-card section-card" id="piutang-pay-form-card">
-      <h2 class="section-title">🤝 Piutang — Tambah</h2>
-      ${renderDebtPayForm('piutang', piutangs)}
-    </div>
-
-    <!-- Donut Piutang -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Breakdown Kategori Piutang</h2>
-      <div class="chart-donut-wrap">
-        <canvas id="piutang-donut-chart" height="200"></canvas>
-        <div id="piutang-donut-legend" class="donut-legend"></div>
+      <!-- Half: Donut piutang -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Breakdown Piutang</h2>
+        <canvas id="piutang-donut-chart" height="180"></canvas>
+        <div id="piutang-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
       </div>
-    </div>
-
-    <!-- Riwayat Gabungan -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Riwayat Hutang & Piutang</h2>
-      <div id="debt-history-list"></div>
+      <!-- Half: Form rencana piutang baru -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">+ Rencana Piutang Baru</h2>
+        ${renderDebtPlanForm('piutang')}
+      </div>
+      <!-- Half: Form catat piutang -->
+      <div class="glass-card section-card" id="piutang-pay-form-card">
+        <h2 class="section-title">Catat Piutang</h2>
+        ${renderDebtPayForm('piutang', piutangs)}
+      </div>
+      <!-- Full: Riwayat gabungan -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Riwayat Hutang & Piutang</h2>
+        <div id="debt-history-list"></div>
+      </div>
     </div>
   `;
 
@@ -419,7 +396,8 @@ window.deleteDebtPlan = deleteDebtPlan;
 
 /* ── CHARTS ── */
 function renderDebtCharts(hutangs, piutangs) {
-  const colors = ['#fb923c','#f87171','#fbbf24','#c084fc','#38bdf8','#34d399'];
+  const themeC = getThemeColors();
+  const colors = [themeC[3], themeC[1], themeC[2], themeC[4], themeC[0], themeC[5]];
 
   /* Donut hutang */
   const dCtx = $('debt-donut-chart');
