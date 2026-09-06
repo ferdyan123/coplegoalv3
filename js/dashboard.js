@@ -198,17 +198,33 @@ function renderDashboard() {
   renderFinanceSticker();
 }
 
+function getDashCategories() {
+  // 5 kategori baru untuk chart: gabungkan expense, pakai state.debts untuk hutang
+  const expenseBudget = calcTotalBudget(EXPENSE_CATEGORIES);
+  const expenseActual = calcTotalActual(EXPENSE_CATEGORIES);
+  const debtTotal    = (state.debts || []).filter(d => d.type === 'hutang').reduce((s, d) => s + (d.sisaHutang || 0), 0);
+  const piutangTotal = (state.debts || []).filter(d => d.type === 'piutang').reduce((s, d) => s + (d.sisaHutang || 0), 0);
+  return [
+    { label: 'Pemasukan',       icon: '💼', budget: calcBudget('income'),      actual: calcActual('income') },
+    { label: 'Pengeluaran',     icon: '🛒', budget: expenseBudget,              actual: expenseActual },
+    { label: 'Tabungan',        icon: '🐷', budget: calcBudget('savings'),      actual: calcActual('savings') },
+    { label: 'Hutang',          icon: '💳', budget: debtTotal + piutangTotal,   actual: debtTotal },
+    { label: 'Investasi',       icon: '📈', budget: calcBudget('investments'),  actual: calcActual('investments') },
+  ];
+}
+
 function renderDonutChart() {
   const ctx = $('donut-budget'); if (!ctx) return;
-  const labels = CATEGORIES.map(c => c.label);
-  const data   = CATEGORIES.map(c => calcBudget(c.key));
+  const cats   = getDashCategories();
+  const labels = cats.map(c => c.label);
+  const data   = cats.map(c => c.budget);
   const colors = getThemeColors();
   const total  = data.reduce((s, v) => s + v, 0);
   $('donut-budget-total').textContent = fmt(total);
-  $('donut-legend').innerHTML = CATEGORIES.map((c, i) => `
+  $('donut-legend').innerHTML = cats.map((c, i) => `
     <div class="legend-item">
       <span class="legend-dot" style="background:${colors[i]}"></span>
-      <span>${c.label}</span>
+      <span>${c.icon} ${c.label}</span>
       <span class="legend-val">${fmt(data[i])}</span>
     </div>`).join('');
   if (donutChart) donutChart.destroy();
@@ -235,9 +251,11 @@ function renderDonutChart() {
 
 function renderBarChart() {
   const ctx = $('bar-overview'); if (!ctx) return;
-  const labels  = CATEGORIES.map(c => c.label.split(' ')[0]);
-  const budget  = CATEGORIES.map(c => calcBudget(c.key));
-  const actual  = CATEGORIES.map(c => calcActual(c.key));
+  const cats    = getDashCategories();
+  const isMobile = window.innerWidth <= 768;
+  const labels  = cats.map(c => isMobile ? c.icon : c.label.split(' ')[0]);
+  const budget  = cats.map(c => c.budget);
+  const actual  = cats.map(c => c.actual);
   const accent  = getCSSVar('--accent');
   const accent2 = getCSSVar('--accent-2');
   const axisC   = getAxisColor();
@@ -248,16 +266,19 @@ function renderBarChart() {
     type: 'bar',
     data: { labels, datasets: [
       { label: 'Budget', data: budget,
-        backgroundColor: accent + '33', borderColor: accent, borderWidth: 2, borderRadius: 8, borderSkipped: false },
+        backgroundColor: accent + '33', borderColor: accent, borderWidth: 2, borderRadius: 6, borderSkipped: false },
       { label: 'Aktual', data: actual,
-        backgroundColor: accent2 + '99', borderColor: accent2, borderWidth: 2, borderRadius: 8, borderSkipped: false },
+        backgroundColor: accent2 + '99', borderColor: accent2, borderWidth: 2, borderRadius: 6, borderSkipped: false },
     ]},
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: axisC, font: { size: 11, family: "'Plus Jakarta Sans'" }, boxWidth: 12, borderRadius: 4 } },
+        legend: { labels: { color: axisC, font: { size: 10, family: "'Plus Jakarta Sans'" }, boxWidth: 10, borderRadius: 3 } },
         tooltip: {
-          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}` },
+          callbacks: {
+            title: items => cats[items[0].dataIndex]?.label || items[0].label,
+            label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`
+          },
           backgroundColor: getCSSVar('--bg-elevated'),
           titleColor: getCSSVar('--text-primary'),
           bodyColor: getCSSVar('--text-secondary'),
@@ -266,8 +287,8 @@ function renderBarChart() {
         }
       },
       scales: {
-        x: { ticks: { color: axisC, font: { size: 10 } }, grid: { color: gridC }, border: { color: 'transparent' } },
-        y: { ticks: { color: axisC, font: { size: 10 }, callback: v => fmt(v) }, grid: { color: gridC }, border: { color: 'transparent' } },
+        x: { ticks: { color: axisC, font: { size: isMobile ? 13 : 10 } }, grid: { color: gridC }, border: { color: 'transparent' } },
+        y: { ticks: { color: axisC, font: { size: 9 }, callback: v => fmt(v) }, grid: { color: gridC }, border: { color: 'transparent' } },
       },
     }
   });
