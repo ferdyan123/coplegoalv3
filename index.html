@@ -227,22 +227,26 @@
         </button>
       </div>
       <div class="nav-group">
-        <div class="nav-group-label">Keuangan</div>
+        <div class="nav-group-label">Anggaran</div>
         <button class="nav-item" data-page="income" id="nav-income">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Pemasukan
         </button>
-        <button class="nav-item" data-page="expense" id="nav-expense">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          Pengeluaran
+        <button class="nav-item" data-page="fixed" id="nav-fixed">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Pengeluaran Tetap
+        </button>
+        <button class="nav-item" data-page="variable" id="nav-variable">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Variabel
+        </button>
+        <button class="nav-item" data-page="loan" id="nav-loan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Cicilan
         </button>
         <button class="nav-item" data-page="savings" id="nav-savings">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2z"/><circle cx="11" cy="9" r="1"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0H5m-2 0h2M9 7h1m-1 4h1m4-4h1m-1 4h1"/></svg>
           Tabungan
-        </button>
-        <button class="nav-item" data-page="debt" id="nav-debt">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          Hutang &amp; Piutang
         </button>
         <button class="nav-item" data-page="investments" id="nav-investments">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
@@ -264,7 +268,7 @@
 
     <div class="sidebar-bottom">
       <button class="sidebar-btn" id="sidebar-theme-toggle">
-        <span id="sidebar-theme-icon">🌙</span> Mode Gelap
+        <span id="sidebar-theme-icon">🖤</span> 🖤 Drako
       </button>
       <button class="sidebar-btn" id="sidebar-export-btn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -285,21 +289,222 @@
   <div class="main-wrap">
     <!-- TOPBAR -->
     <header class="topbar">
-      <button class="btn-icon" id="menu-toggle" aria-label="Toggle menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+
+      <!-- Logo — klik = Dashboard, juga jadi mask kiri untuk scroll tabs -->
+      <button class="topbar-logo" id="topbar-logo-btn" onclick="navigateTo('dashboard')" aria-label="CoupleGoal — ke Dashboard">
+        <div class="topbar-logo-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <span class="topbar-logo-text">CoupleGoal</span>
       </button>
-      <span class="topbar-title" id="topbar-title">Dashboard</span>
+
+      <!-- Scrollable tab nav dengan fade mask kiri -->
+      <div class="topbar-nav-wrap">
+        <div class="topbar-nav-fade-left"></div>
+        <nav class="topbar-nav" id="topbar-nav" role="navigation" aria-label="Menu utama">
+
+          <button class="topbar-tab active" data-page="dashboard" id="tnav-dashboard">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </button>
+
+          <button class="topbar-tab" data-page="transactions" id="tnav-transactions">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Transaksi
+          </button>
+
+          <!-- Anggaran dropdown trigger -->
+          <div class="topbar-tab-dropdown-wrap" id="anggaran-dropdown-wrap">
+            <button class="topbar-tab" id="tnav-anggaran" aria-haspopup="true" aria-expanded="false">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Anggaran
+              <svg class="topbar-tab-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="topbar-dropdown" id="anggaran-dropdown" role="menu">
+              <button class="topbar-dropdown-item" data-page="income" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Pemasukan
+              </button>
+              <button class="topbar-dropdown-item" data-page="fixed" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Pengeluaran Tetap
+              </button>
+              <button class="topbar-dropdown-item" data-page="variable" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Variabel
+              </button>
+              <button class="topbar-dropdown-item" data-page="loan" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Cicilan
+              </button>
+              <button class="topbar-dropdown-item" data-page="savings" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/><path d="M3 21h18"/></svg>
+                Tabungan
+              </button>
+              <button class="topbar-dropdown-item" data-page="investments" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Investasi
+              </button>
+            </div>
+          </div>
+
+          <button class="topbar-tab" data-page="report" id="tnav-report">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Laporan
+          </button>
+
+          <button class="topbar-tab" data-page="goals" id="tnav-goals">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Goals
+          </button>
+
+          <button class="topbar-tab" data-page="split" id="tnav-split">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></svg>
+            Split
+          </button>
+
+          <button class="topbar-tab" data-page="home" id="tnav-home">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            Panduan
+          </button>
+
+        </nav>
+      </div>
+
+      <!-- Kanan: theme + catat + avatar -->
       <div class="topbar-actions">
-        <button class="btn-icon" id="topbar-theme-toggle" aria-label="Toggle theme">
-          <span id="topbar-theme-icon">🌙</span>
+        <button class="btn-icon topbar-theme-btn" id="topbar-theme-toggle" aria-label="Ganti tema">
+          <span id="topbar-theme-icon">🖤</span>
         </button>
-        <button class="btn btn-ghost btn-sm" id="add-budget-btn" style="display:none">+ Anggaran</button>
-        <button class="btn btn-primary btn-sm" id="add-tx-btn">+ Transaksi</button>
+        <button class="btn btn-primary btn-sm topbar-add-btn" id="add-tx-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="topbar-add-label">Catat</span>
+        </button>
         <button class="btn-icon" id="topbar-settings" aria-label="Pengaturan">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
       </div>
     </header>
+
+    <!-- BOTTOM NAV — mobile only -->
+    <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Navigasi bawah">
+      <button class="bottom-tab active" data-page="dashboard" id="bnav-dashboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Beranda</span>
+      </button>
+
+      <button class="bottom-tab" id="bnav-anggaran-trigger">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span>Anggaran</span>
+      </button>
+
+      <!-- Tombol + di tengah -->
+      <div class="bottom-tab-center">
+        <button class="bottom-tab-plus" id="bnav-add" aria-label="Catat transaksi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+
+      <button class="bottom-tab" data-page="transactions" id="bnav-transactions">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Transaksi</span>
+      </button>
+
+      <button class="bottom-tab" id="bnav-more">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+        <span>Lainnya</span>
+      </button>
+    </nav>
+
+    <!-- BOTTOM SHEET — Anggaran (mobile) -->
+    <div class="bottom-sheet-overlay" id="anggaran-sheet-overlay"></div>
+    <div class="bottom-sheet" id="anggaran-sheet" role="dialog" aria-label="Menu Anggaran">
+      <div class="bottom-sheet-handle"></div>
+      <div class="bottom-sheet-title">Anggaran</div>
+      <div class="bottom-sheet-grid">
+        <button class="bottom-sheet-item" data-page="income">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span>Pemasukan</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="fixed">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span>Pengeluaran Tetap</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="variable">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <span>Variabel</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="loan">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <span>Cicilan</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="savings">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/><path d="M3 21h18"/></svg>
+          </div>
+          <span>Tabungan</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="investments">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <span>Investasi</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- BOTTOM SHEET — Lainnya (mobile) -->
+    <div class="bottom-sheet-overlay" id="more-sheet-overlay"></div>
+    <div class="bottom-sheet" id="more-sheet" role="dialog" aria-label="Menu Lainnya">
+      <div class="bottom-sheet-handle"></div>
+      <div class="bottom-sheet-title">Lainnya</div>
+      <div class="bottom-sheet-grid">
+        <button class="bottom-sheet-item" data-page="report">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <span>Laporan</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="goals">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <span>Goals</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="split">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></svg>
+          </div>
+          <span>Split</span>
+        </button>
+        <button class="bottom-sheet-item" data-page="home">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <span>Panduan</span>
+        </button>
+        <button class="bottom-sheet-item" id="bsheet-settings">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <span>Pengaturan</span>
+        </button>
+        <button class="bottom-sheet-item" id="bsheet-theme">
+          <div class="bottom-sheet-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </div>
+          <span id="bsheet-theme-label">Tema</span>
+        </button>
+      </div>
+    </div>
 
     <!-- PAGES -->
     <main class="main-content">
@@ -345,9 +550,9 @@
                   <div class="home-flow-desc">Masukkan rencana keuangan bulan ini di setiap kategori — berapa yang mau dimasukkan, dikeluarkan, ditabung.</div>
                   <div class="home-flow-links">
                     <button class="home-flow-link" onclick="navigateTo('income')">💼 Pemasukan →</button>
-                    <button class="home-flow-link" onclick="navigateTo('expense')">🛒 Pengeluaran Tetap →</button>
-                    <button class="home-flow-link" onclick="navigateTo('expense')">🛍️ Variabel →</button>
-                    <button class="home-flow-link" onclick="navigateTo('debt')">💳 Hutang & Piutang →</button>
+                    <button class="home-flow-link" onclick="navigateTo('fixed')">🏠 Pengeluaran Tetap →</button>
+                    <button class="home-flow-link" onclick="navigateTo('variable')">🛍️ Variabel →</button>
+                    <button class="home-flow-link" onclick="navigateTo('loan')">💳 Cicilan →</button>
                     <button class="home-flow-link" onclick="navigateTo('savings')">🐷 Tabungan →</button>
                     <button class="home-flow-link" onclick="navigateTo('investments')">📈 Investasi →</button>
                   </div>
@@ -458,7 +663,7 @@
                 <div class="home-feature-arrow">→</div>
               </div>
 
-              <div class="home-feature-card" onclick="navigateTo('expense')">
+              <div class="home-feature-card" onclick="navigateTo('fixed')">
                 <div class="home-feature-icon" style="background:rgba(248,113,113,0.15);color:#f87171">🏠</div>
                 <div class="home-feature-body">
                   <div class="home-feature-title">Pengeluaran Tetap</div>
@@ -468,7 +673,7 @@
                 <div class="home-feature-arrow">→</div>
               </div>
 
-              <div class="home-feature-card" onclick="navigateTo('expense')">
+              <div class="home-feature-card" onclick="navigateTo('variable')">
                 <div class="home-feature-icon" style="background:rgba(251,191,36,0.15);color:#fbbf24">🛍️</div>
                 <div class="home-feature-body">
                   <div class="home-feature-title">Pengeluaran Variabel</div>
@@ -478,7 +683,7 @@
                 <div class="home-feature-arrow">→</div>
               </div>
 
-              <div class="home-feature-card" onclick="navigateTo('debt')">
+              <div class="home-feature-card" onclick="navigateTo('loan')">
                 <div class="home-feature-icon" style="background:rgba(251,146,60,0.15);color:#fb923c">💳</div>
                 <div class="home-feature-body">
                   <div class="home-feature-title">Cicilan</div>
@@ -581,49 +786,44 @@
 
       <!-- ── DASHBOARD ── -->
       <section id="page-dashboard" class="page active" aria-label="Dashboard">
-        <div class="page-header">
-          <div>
-            <h1 class="page-title" id="dash-title">Dashboard</h1>
-            <p class="page-subtitle" id="dash-month-label">—</p>
-          </div>
-          <div class="dash-header-actions">
-            <input type="month" id="dash-month-picker" class="month-picker-input" title="Pilih bulan">
-            <button class="btn btn-ghost btn-sm" id="dash-export-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export
-          </button>
-          </div>
-        </div>
 
         <!-- GREETING HERO -->
-        <div class="greeting-hero glass-card" id="dash-greeting-hero">
-          <div class="greeting-hero-top">
-            <div>
-              <div class="greeting-hero-names" id="dash-greeting-names">— & —</div>
-              <div class="greeting-hero-sub" id="dash-greeting-sub">Selamat datang di CoupleGoal!</div>
-              <div class="greeting-hero-msg" id="dash-greeting-msg"></div>
+        <div class="dash-greeting" id="dash-greeting">
+          <div class="dash-greeting-top">
+            <div class="dash-greeting-text">
+              <div><span class="dash-greeting-wave">👋</span></div>
+              <div class="dash-greeting-title">
+                Halo, <span id="dash-greeting-names">Pasangan</span>!
+              </div>
+              <div class="dash-greeting-sub" id="dash-greeting-sub">Ini ringkasan keuangan kalian bulan ini.</div>
+              <div class="dash-greeting-msg" id="dash-greeting-msg"></div>
             </div>
-            <div class="greeting-hero-month" id="dash-greeting-month">—</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;flex-shrink:0">
+              <span class="dash-greeting-month-badge" id="dash-greeting-month">—</span>
+              <div style="display:flex;gap:0.5rem">
+                <input type="month" id="dash-month-picker" class="month-picker-input" title="Pilih bulan" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);color:#fff">
+                <button class="btn btn-ghost btn-sm" id="dash-export-btn" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);color:#fff">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Export
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="greeting-hero-stats">
-            <div class="greeting-stat">
-              <div class="greeting-stat-label">Total Pemasukan</div>
-              <div class="greeting-stat-val income" id="dash-greet-income">—</div>
+          <div class="dash-greeting-stats">
+            <div class="dash-greeting-stat">
+              <div class="dash-greeting-stat-label">Total Pemasukan</div>
+              <div class="dash-greeting-stat-val" id="dash-greet-income">Rp 0</div>
             </div>
-            <div class="greeting-stat">
-              <div class="greeting-stat-label">Total Pengeluaran</div>
-              <div class="greeting-stat-val expense" id="dash-greet-expense">—</div>
+            <div class="dash-greeting-stat">
+              <div class="dash-greeting-stat-label">Total Pengeluaran</div>
+              <div class="dash-greeting-stat-val" id="dash-greet-expense">Rp 0</div>
             </div>
-            <div class="greeting-stat">
-              <div class="greeting-stat-label">Sisa Anggaran</div>
-              <div class="greeting-stat-val" id="dash-greet-left">—</div>
+            <div class="dash-greeting-stat">
+              <div class="dash-greeting-stat-label">Sisa Anggaran</div>
+              <div class="dash-greeting-stat-val" id="dash-greet-left">Rp 0</div>
             </div>
           </div>
         </div>
-
-        <!-- FINANCE STICKER -->
-        <div id="finance-sticker-area"></div>
-
 
         <!-- HEALTH SCORE BANNER -->
         <div class="health-score-banner glass-card" id="health-score-banner">
@@ -635,7 +835,7 @@
           <div class="health-score-ring">
             <svg viewBox="0 0 100 100" width="90" height="90">
               <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-              <circle id="health-ring-fill" cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="8"
+              <circle id="health-ring-fill" cx="50" cy="50" r="40" fill="none" stroke="var(--accent)" stroke-width="8"
                 stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"
                 transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s ease,stroke 0.5s"/>
             </svg>
@@ -645,10 +845,15 @@
           </div>
         </div>
 
+        <!-- FINANCE STICKER -->
+        <div id="finance-sticker-area"></div>
+
         <!-- SUMMARY CARDS -->
         <div class="summary-grid">
           <div class="summary-card income-card glass-card">
-            <div class="summary-icon">💼</div>
+            <div class="summary-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
             <div class="summary-body">
               <div class="summary-label">Total Pemasukan</div>
               <div class="summary-val" id="dash-income-budget">Rp 0</div>
@@ -657,7 +862,9 @@
             <div class="summary-pill" id="dash-income-pill">BELUM ADA</div>
           </div>
           <div class="summary-card expense-card glass-card">
-            <div class="summary-icon">🧾</div>
+            <div class="summary-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
             <div class="summary-body">
               <div class="summary-label">Total Pengeluaran</div>
               <div class="summary-val" id="dash-expense-budget">Rp 0</div>
@@ -666,7 +873,9 @@
             <div class="summary-pill" id="dash-expense-pill">ON BUDGET ✅</div>
           </div>
           <div class="summary-card savings-card glass-card">
-            <div class="summary-icon">🐷</div>
+            <div class="summary-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/><path d="M3 21h18"/><path d="M9 7h1m4 0h1"/></svg>
+            </div>
             <div class="summary-body">
               <div class="summary-label">Tabungan + Investasi</div>
               <div class="summary-val" id="dash-save-budget">Rp 0</div>
@@ -674,7 +883,9 @@
             </div>
           </div>
           <div class="summary-card balance-card glass-card">
-            <div class="summary-icon">💰</div>
+            <div class="summary-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            </div>
             <div class="summary-body">
               <div class="summary-label">Sisa Anggaran</div>
               <div class="summary-val" id="dash-left-budget">Rp 0</div>
@@ -861,17 +1072,27 @@
         </div>
       </section>
 
-      
-  
+      <!-- ── BUDGET CATEGORY PAGES ── -->
       <section id="page-income" class="page"></section>
-
-      <section id="page-expense" class="page"></section>
-
-      <section id="page-debt" class="page"></section>
-
+      <section id="page-fixed" class="page" aria-label="Pengeluaran Tetap">
+        <div class="page-header"><div><h1 class="page-title">🏠 Pengeluaran Tetap</h1><p class="page-subtitle">Fixed Expenses</p></div><button class="btn btn-primary add-item-btn" data-category="fixed" id="add-fixed-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="fixed-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="fixed-table"></div>
+      </section>
+      <section id="page-variable" class="page" aria-label="Pengeluaran Variabel">
+        <div class="page-header"><div><h1 class="page-title">🛍️ Pengeluaran Variabel</h1><p class="page-subtitle">Variable Expenses</p></div><button class="btn btn-primary add-item-btn" data-category="variable" id="add-variable-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="variable-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="variable-table"></div>
+      </section>
+      <section id="page-loan" class="page" aria-label="Cicilan">
+        <div class="page-header"><div><h1 class="page-title">💳 Cicilan</h1><p class="page-subtitle">Loan Repayments</p></div><button class="btn btn-primary add-item-btn" data-category="loan" id="add-loan-btn">+ Anggaran</button></div>
+        <div class="category-summary-bar" id="loan-summary-bar"></div>
+        <div class="budget-table-wrap glass-card" id="loan-table"></div>
+      </section>
       <section id="page-savings" class="page"></section>
-
       <section id="page-investments" class="page"></section>
+      <section id="page-expense" class="page"></section>
+      <section id="page-debt" class="page"></section>
 
     </main>
   </div>
@@ -1010,11 +1231,10 @@
       <div class="settings-section">
         <h3>🎨 Tema</h3>
         <div class="theme-buttons">
-          <button class="theme-btn" data-theme="dark">🌙 Gelap</button>
-          <button class="theme-btn" data-theme="light">☀️ Terang</button>
-          <button class="theme-btn" data-theme="rose">🌸 Lupi</button>
+          <button class="theme-btn" data-theme="dark">🖤 Drako</button>
+          <button class="theme-btn" data-theme="yuki">❄️ Yuki</button>
+          <button class="theme-btn" data-theme="rose">🩷 Pupi</button>
           <button class="theme-btn" data-theme="ocean">🌊 Ocean</button>
-          <button class="theme-btn" data-theme="sakura">🌺 Sakura</button>
         </div>
       </div>
       <div class="settings-section">
