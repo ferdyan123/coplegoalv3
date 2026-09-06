@@ -101,7 +101,7 @@ function updateSidebarCouple() {
 /* ══════════════════════════════════════════
    NAVIGATION
 ══════════════════════════════════════════ */
-const ANGGARAN_PAGES = ['income','fixed','variable','loan','savings','investments','expense','debt'];
+const ANGGARAN_PAGES = ['income','expense','savings','debt','investments'];
 
 function navigateTo(page) {
   currentPage = page;
