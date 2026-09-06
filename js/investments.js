@@ -54,62 +54,43 @@ function renderInvestmentsPage() {
 
   const el = $('page-investments'); if (!el) return;
   el.innerHTML = `
-    <!-- Summary Cards -->
     <div class="summary-cards-grid">
       ${summaryCard('Total Investasi', fmt(totalInvest), pctChange !== null ? `${pctChange >= 0 ? '▲' : '▼'} ${Math.abs(pctChange)}%` : '—', pctChange !== null ? (pctChange >= 0 ? 'up' : 'down') : '', monthLabel(month))}
-      ${summaryCard('Investasi Bersama', fmt(sharedInvest), '🤝', '', 'shared')}
-      ${summaryCard(`Investasi ${s.name1}`, fmt(p1Invest), '👤', '', s.name1)}
-      ${summaryCard(`Investasi ${s.name2}`, fmt(p2Invest), '👤', '', s.name2)}
+      ${summaryCard('Bersama', fmt(sharedInvest), '', '', '')}
+      ${summaryCard(s.name1, fmt(p1Invest), '', '', '')}
+      ${summaryCard(s.name2, fmt(p2Invest), '', '', '')}
     </div>
-
-    <!-- Kategori Terbesar -->
-    <div class="glass-card top-cat-card">
-      <span class="top-cat-label">INSTRUMEN TERBESAR</span>
-      <span class="top-cat-val">${topCat ? topCat[0] : '—'}</span>
-      ${topCat ? `<span class="top-cat-amt">${fmt(topCat[1])}</span>` : ''}
-    </div>
-
-    <!-- Budget Neraca -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">💰 Target Investasi Bulan Ini</h2>
-      ${renderInvestBudgetBar(totalInvest, budgetInvest)}
-    </div>
-
-    <!-- Form Tambah Investasi -->
-    <div class="glass-card section-card" id="invest-form-card">
-      <div class="section-header-row">
-        <h2 class="section-title">📈 Tambah Investasi <span style="font-size:1.2rem">💹</span></h2>
-        <button class="btn btn-ghost btn-sm" onclick="openInvestCategoryManager()">⚙️ Kategori</button>
+    <div class="tab-page-grid">
+      <!-- Full: Target + Form -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Target Investasi Bulan Ini</h2>
+        ${renderInvestBudgetBar(totalInvest, budgetInvest)}
       </div>
-      ${renderInvestForm(s)}
-    </div>
-
-    <!-- Breakdown per Kategori -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Breakdown per Instrumen</h2>
-      <div class="chart-donut-wrap">
-        <canvas id="invest-donut-chart" height="220"></canvas>
-        <div id="invest-donut-legend" class="donut-legend"></div>
+      <div class="glass-card section-card tab-full-width" id="invest-form-card">
+        <div class="section-header-row">
+          <h2 class="section-title">Tambah Investasi</h2>
+          <button class="btn btn-ghost btn-sm" onclick="openInvestCategoryManager()">⚙️ Kategori</button>
+        </div>
+        ${renderInvestForm(s)}
       </div>
-    </div>
-
-    <!-- Breakdown per Pemilik -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">👥 Breakdown per Pemilik</h2>
-      <div id="invest-owner-bars"></div>
-    </div>
-
-    <!-- Trend Harian -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📅 Tren Harian — ${monthLabel(month)}</h2>
-      <p class="section-subtitle">Total investasi per hari selama sebulan</p>
-      <canvas id="invest-daily-chart" height="160"></canvas>
-    </div>
-
-    <!-- Riwayat -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Riwayat Investasi — Bulan Ini</h2>
-      <div id="invest-history-list"></div>
+      <!-- Half: Donut -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Breakdown Instrumen</h2>
+        <canvas id="invest-donut-chart" height="200"></canvas>
+        <div id="invest-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
+      </div>
+      <!-- Half: Pemilik + Daily -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Per Pemilik</h2>
+        <div id="invest-owner-bars" style="margin-bottom:1.25rem"></div>
+        <h2 class="section-title" style="margin-top:0.5rem">Tren Harian</h2>
+        <canvas id="invest-daily-chart" height="140"></canvas>
+      </div>
+      <!-- Full: Riwayat -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Riwayat Investasi — Bulan Ini</h2>
+        <div id="invest-history-list"></div>
+      </div>
     </div>
   `;
 
@@ -227,7 +208,8 @@ function renderInvestCharts(txs, month) {
   txs.forEach(t => { catMap[t.category || 'Lainnya'] = (catMap[t.category || 'Lainnya'] || 0) + t.amount; });
   const catLabels = Object.keys(catMap);
   const catVals   = Object.values(catMap);
-  const colors    = ['#c084fc','#38bdf8','#fbbf24','#34d399','#fb923c','#f87171','#f472b6','#a3e635'];
+  const themeC = getThemeColors();
+  const colors = [themeC[2], themeC[0], themeC[3], themeC[1], themeC[4], themeC[5], themeC[2]+'aa', themeC[0]+'aa'];
 
   const donutCtx = $('invest-donut-chart');
   if (donutCtx) {
