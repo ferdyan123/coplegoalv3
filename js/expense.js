@@ -50,67 +50,54 @@ function renderExpensePage() {
 
   const el = $('page-expense'); if (!el) return;
   el.innerHTML = `
-    <!-- Summary Cards -->
     <div class="summary-cards-grid">
       ${summaryCard('Total Pengeluaran', fmt(total), '', '', monthLabel(month))}
-      ${summaryCard('Pengeluaran Tetap', fmt(totalTetap), '🏠', '', 'jenis: tetap')}
-      ${summaryCard('Tidak Tetap', fmt(totalTdkTetap), '🛍️', '', 'jenis: tidak tetap')}
+      ${summaryCard('Tetap', fmt(totalTetap), '', '', '')}
+      ${summaryCard('Tidak Tetap', fmt(totalTdkTetap), '', '', '')}
       <div class="summary-card glass-card">
-        <div class="summary-card-label">Kategori Terbesar</div>
+        <div class="summary-card-label">Terbesar</div>
         <div class="summary-card-val" style="font-size:1rem">${topCat ? topCat[0] : '—'}</div>
         ${topCat ? `<div class="summary-card-sub">${fmt(topCat[1])}</div>` : ''}
       </div>
     </div>
-
-    <!-- Budget Neraca -->
-    <div class="glass-card section-card">
-      <div class="section-header-row">
-        <h2 class="section-title">💰 Budget Pengeluaran Bulan Ini</h2>
-        <div class="budget-toggle-wrap">
-          <button class="btn btn-ghost btn-sm ${budgetTotal > 0 ? 'active' : ''}" onclick="showBudgetBreakdown()">📊 Total</button>
-          <button class="btn btn-ghost btn-sm" onclick="showBudgetByCategory()">🗂️ Per Kategori</button>
+    <div class="tab-page-grid">
+      <!-- Full: Budget neraca -->
+      <div class="glass-card section-card tab-full-width">
+        <div class="section-header-row">
+          <h2 class="section-title">Budget Pengeluaran</h2>
+          <div class="budget-toggle-wrap">
+            <button class="btn btn-ghost btn-sm ${budgetTotal > 0 ? 'active' : ''}" onclick="showBudgetBreakdown()">Total</button>
+            <button class="btn btn-ghost btn-sm" onclick="showBudgetByCategory()">Per Kategori</button>
+          </div>
         </div>
+        <div id="expense-budget-wrap">${renderBudgetNeraca(total, budgetTotal, sisaBudget)}</div>
       </div>
-      <div id="expense-budget-wrap">
-        ${renderBudgetNeraca(total, budgetTotal, sisaBudget)}
+      <!-- Full: Form -->
+      <div class="glass-card section-card tab-full-width" id="expense-form-card">
+        <div class="section-header-row">
+          <h2 class="section-title">Tambah Pengeluaran</h2>
+          <button class="btn btn-ghost btn-sm" onclick="openExpenseCategoryManager()">⚙️ Kategori</button>
+        </div>
+        ${renderExpenseForm()}
       </div>
-    </div>
-
-    <!-- Form Tambah Pengeluaran -->
-    <div class="glass-card section-card" id="expense-form-card">
-      <div class="section-header-row">
-        <h2 class="section-title">🛒 Tambah Pengeluaran <span style="font-size:1.2rem">🧾</span></h2>
-        <button class="btn btn-ghost btn-sm" onclick="openExpenseCategoryManager()">⚙️ Kategori</button>
+      <!-- Half: Donut -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Breakdown Kategori</h2>
+        <canvas id="expense-donut-chart" height="200"></canvas>
+        <div id="expense-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
       </div>
-      ${renderExpenseForm()}
-    </div>
-
-    <!-- Breakdown per Kategori -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Breakdown per Kategori</h2>
-      <div class="chart-donut-wrap" id="expense-donut-wrap">
-        <canvas id="expense-donut-chart" height="220"></canvas>
-        <div id="expense-donut-legend" class="donut-legend"></div>
+      <!-- Half: Pemilik + Daily -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Per Pemilik</h2>
+        <div id="expense-owner-bars" style="margin-bottom:1.25rem"></div>
+        <h2 class="section-title" style="margin-top:0.5rem">Tren Harian</h2>
+        <canvas id="expense-daily-chart" height="140"></canvas>
       </div>
-    </div>
-
-    <!-- Breakdown per Pemilik -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">👥 Breakdown per Pemilik</h2>
-      <div id="expense-owner-bars"></div>
-    </div>
-
-    <!-- Trend Harian -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📅 Tren Harian — ${monthLabel(month)}</h2>
-      <p class="section-subtitle">Total pengeluaran per hari selama sebulan</p>
-      <canvas id="expense-daily-chart" height="160"></canvas>
-    </div>
-
-    <!-- Riwayat -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Riwayat Pengeluaran — Bulan Ini</h2>
-      <div id="expense-history-list"></div>
+      <!-- Full: Riwayat -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Riwayat Pengeluaran — Bulan Ini</h2>
+        <div id="expense-history-list"></div>
+      </div>
     </div>
   `;
 
@@ -236,7 +223,8 @@ function renderExpenseCharts(txs, month) {
   txs.forEach(t => { catMap[t.category || 'Lainnya'] = (catMap[t.category || 'Lainnya'] || 0) + t.amount; });
   const catLabels = Object.keys(catMap);
   const catVals   = Object.values(catMap);
-  const colors    = ['#f87171','#fbbf24','#fb923c','#38bdf8','#c084fc','#34d399','#f472b6','#a3e635'];
+  const themeC = getThemeColors();
+  const colors = [themeC[1], themeC[2], themeC[3], themeC[0], themeC[4], themeC[5], themeC[1]+'aa', themeC[2]+'aa'];
 
   const donutCtx = $('expense-donut-chart');
   if (donutCtx) {
