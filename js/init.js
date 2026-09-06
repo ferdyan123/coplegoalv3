@@ -47,29 +47,54 @@ function initApp() {
   $('topbar-logo-btn')?.addEventListener('click', () => navigateTo('dashboard'));
 
   /* ── Anggaran dropdown (topbar desktop) ── */
+  /* Pakai position:fixed agar tidak ter-clip oleh overflow:hidden di .topbar-nav-wrap */
   const anggaranBtn  = $('tnav-anggaran');
   const anggaranDrop = $('anggaran-dropdown');
   if (anggaranBtn && anggaranDrop) {
+    function positionAnggaranDrop() {
+      const rect = anggaranBtn.getBoundingClientRect();
+      anggaranDrop.style.top  = (rect.bottom + 8) + 'px';
+      anggaranDrop.style.left = rect.left + 'px';
+    }
+
+    function openAnggaranDrop() {
+      positionAnggaranDrop();
+      anggaranDrop.classList.add('open');
+      anggaranBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeAnggaranDrop() {
+      anggaranDrop.classList.remove('open');
+      anggaranBtn.setAttribute('aria-expanded', 'false');
+    }
+
     anggaranBtn.addEventListener('click', e => {
       e.stopPropagation();
-      const isOpen = anggaranDrop.classList.contains('open');
-      anggaranDrop.classList.toggle('open', !isOpen);
-      anggaranBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (anggaranDrop.classList.contains('open')) {
+        closeAnggaranDrop();
+      } else {
+        openAnggaranDrop();
+      }
     });
+
     anggaranDrop.querySelectorAll('.topbar-dropdown-item[data-page]').forEach(item => {
       item.addEventListener('click', () => {
         navigateTo(item.dataset.page);
-        anggaranDrop.classList.remove('open');
-        anggaranBtn.setAttribute('aria-expanded', 'false');
+        closeAnggaranDrop();
       });
     });
+
     document.addEventListener('click', e => {
       const wrap = $('anggaran-dropdown-wrap');
-      if (wrap && !wrap.contains(e.target)) {
-        anggaranDrop.classList.remove('open');
-        anggaranBtn.setAttribute('aria-expanded', 'false');
+      if (wrap && !wrap.contains(e.target) && !anggaranDrop.contains(e.target)) {
+        closeAnggaranDrop();
       }
     });
+
+    // Reposition on scroll/resize
+    window.addEventListener('resize', () => {
+      if (anggaranDrop.classList.contains('open')) positionAnggaranDrop();
+    }, { passive: true });
   }
 
   /* ── Bottom nav ── */
