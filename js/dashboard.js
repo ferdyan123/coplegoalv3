@@ -65,64 +65,9 @@ function renderDashboard() {
   renderPersonBreakdown();
   renderCategoryStatusBars();
   renderRecentTransactions();
-  renderGreetingHero();
   renderFinanceSticker();
 }
 
-/* ── GREETING HERO ── */
-function renderGreetingHero() {
-  const s = state.settings;
-  const greetNames = $('dash-greeting-names');
-  const greetMonth = $('dash-greeting-month');
-  const greetSub   = $('dash-greeting-sub');
-  const greetMsg   = $('dash-greeting-msg');
-  if (greetNames) greetNames.textContent = `${s.name1} & ${s.name2}`;
-  if (greetMonth) greetMonth.textContent = monthLabel(s.month) || '—';
-
-  const hour = new Date().getHours();
-  const tod  = hour < 11 ? 'Selamat pagi' : hour < 15 ? 'Selamat siang' : hour < 18 ? 'Selamat sore' : 'Selamat malam';
-  if (greetSub) greetSub.textContent = `${tod}! Ini ringkasan keuangan kalian bulan ${monthLabel(s.month) || 'ini'}.`;
-
-  const incomeBudget  = calcBudget('income');
-  const incomeActual  = calcActual('income');
-  const expenseBudget = calcTotalBudget(EXPENSE_CATEGORIES);
-  const expenseActual = calcTotalActual(EXPENSE_CATEGORIES);
-  const savActual     = calcActual('savings') + calcActual('investments');
-  const leftActual    = incomeActual - expenseActual - savActual;
-  const income        = incomeActual || incomeBudget;
-  const leftPct       = income > 0 ? leftActual / income : null;
-  const expPct        = income > 0 ? expenseActual / income : null;
-  const savRate       = income > 0 ? savActual / income : 0;
-  const totalTx = state.transactions.filter(t =>
-    !s.month || (t.date || '').startsWith(s.month)
-  ).length;
-
-  if (greetMsg) {
-    let msg = '';
-    if (totalTx === 0 && incomeBudget === 0) {
-      msg = '🌱 Belum ada data keuangan. Mulai dengan mengisi anggaran dan catat transaksi pertama kalian!';
-    } else if (totalTx === 0) {
-      msg = '📋 Anggaran sudah diset! Yuk mulai catat transaksi agar kalian bisa pantau pengeluaran secara real-time.';
-    } else if (expenseActual > expenseBudget && expenseBudget > 0) {
-      msg = '⚠️ Pengeluaran kalian sudah melebihi anggaran bulan ini. Yuk review bersama dan rem sedikit pengeluaran variabel!';
-    } else if (leftPct !== null && leftPct >= 0.30) {
-      msg = `🎉 Keren! Kalian masih punya ${Math.round(leftPct*100)}% sisa pemasukan. Pertimbangkan tambahkan ke tabungan atau investasi bareng!`;
-    } else if (savRate >= 0.20) {
-      msg = `💪 Rasio tabungan kalian ${Math.round(savRate*100)}% — sudah melampaui target ideal 20%. Tetap konsisten ya!`;
-    } else if (expPct !== null && expPct > 0.75) {
-      msg = `📊 Pengeluaran kalian sudah ${Math.round(expPct*100)}% dari pemasukan. Pantau terus agar bulan ini tetap aman.`;
-    } else if (savActual === 0 && incomeBudget > 0) {
-      msg = '🐷 Belum ada tabungan bulan ini. Coba sisihkan minimal 10% dari pemasukan sekarang, sekecil apapun itu!';
-    } else {
-      msg = '✅ Keuangan kalian berjalan lancar bulan ini. Pantau terus dan jaga konsistensinya bersama!';
-    }
-    greetMsg.textContent = msg;
-  }
-
-  const gi = $('dash-greet-income');  if (gi) gi.textContent = fmt(incomeActual || incomeBudget);
-  const ge = $('dash-greet-expense'); if (ge) ge.textContent = fmt(expenseActual);
-  const gl = $('dash-greet-left');    if (gl) gl.textContent = fmt(leftActual);
-}
 
 /* ── FINANCE STICKER ── */
 function getFinanceStickerConfig() {
