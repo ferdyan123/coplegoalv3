@@ -48,56 +48,39 @@ function renderIncomePage() {
 
   const el = $('page-income'); if (!el) return;
   el.innerHTML = `
-    <!-- Summary Cards -->
     <div class="summary-cards-grid">
       ${summaryCard('Total Pemasukan', fmt(totalIncome), pctChange !== null ? `${pctChange > 0 ? '▲' : '▼'} ${Math.abs(pctChange)}%` : '—', pctChange !== null ? (pctChange >= 0 ? 'up' : 'down') : '', monthLabel(month))}
       ${summaryCard('Pemasukan Bersama', fmt(sharedIncome), '🤝', '', 'shared')}
-      ${summaryCard(`Pemasukan ${s.name1}`, fmt(p1Income), '👤', '', s.name1)}
-      ${summaryCard(`Pemasukan ${s.name2}`, fmt(p2Income), '👤', '', s.name2)}
+      ${summaryCard(`${s.name1}`, fmt(p1Income), '', '', '')}
+      ${summaryCard(`${s.name2}`, fmt(p2Income), '', '', '')}
     </div>
-
-    <!-- Kategori Terbesar -->
-    <div class="glass-card top-cat-card">
-      <span class="top-cat-label">KATEGORI TERBESAR</span>
-      <span class="top-cat-val">${topCat ? topCat[0] : '—'}</span>
-      ${topCat ? `<span class="top-cat-amt">${fmt(topCat[1])}</span>` : ''}
-    </div>
-
-    <!-- Form Tambah Pemasukan -->
-    <div class="glass-card section-card" id="income-form-card">
-      <div class="section-header-row">
-        <h2 class="section-title">💼 Tambah Pemasukan <span style="font-size:1.2rem">🧾</span></h2>
-        <button class="btn btn-ghost btn-sm" onclick="openIncomeCategoryManager()">⚙️ Kategori</button>
+    <div class="tab-page-grid">
+      <!-- Full width: Form -->
+      <div class="glass-card section-card tab-full-width" id="income-form-card">
+        <div class="section-header-row">
+          <h2 class="section-title">Tambah Pemasukan</h2>
+          <button class="btn btn-ghost btn-sm" onclick="openIncomeCategoryManager()">⚙️ Kategori</button>
+        </div>
+        ${renderIncomeForm()}
       </div>
-      ${renderIncomeForm()}
-    </div>
-
-    <!-- Breakdown per Kategori -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📊 Breakdown per Kategori</h2>
-      <div class="chart-donut-wrap" id="income-donut-wrap">
-        <canvas id="income-donut-chart" height="220"></canvas>
-        <div id="income-donut-legend" class="donut-legend"></div>
+      <!-- Half: Donut -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Breakdown Kategori</h2>
+        <canvas id="income-donut-chart" height="200"></canvas>
+        <div id="income-donut-legend" class="donut-legend" style="margin-top:0.75rem"></div>
       </div>
-    </div>
-
-    <!-- Breakdown per Pemilik -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">👥 Breakdown per Pemilik</h2>
-      <div id="income-owner-bars"></div>
-    </div>
-
-    <!-- Trend Harian -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📅 Tren Harian — ${monthLabel(month)}</h2>
-      <p class="section-subtitle">Total pemasukan per hari selama sebulan</p>
-      <canvas id="income-daily-chart" height="160"></canvas>
-    </div>
-
-    <!-- Riwayat -->
-    <div class="glass-card section-card">
-      <h2 class="section-title">📋 Riwayat Pemasukan — Bulan Ini</h2>
-      <div id="income-history-list"></div>
+      <!-- Half: Owner bars + Daily -->
+      <div class="glass-card section-card">
+        <h2 class="section-title">Per Pemilik</h2>
+        <div id="income-owner-bars" style="margin-bottom:1.25rem"></div>
+        <h2 class="section-title" style="margin-top:0.5rem">Tren Harian</h2>
+        <canvas id="income-daily-chart" height="140"></canvas>
+      </div>
+      <!-- Full width: Riwayat -->
+      <div class="glass-card section-card tab-full-width">
+        <h2 class="section-title">Riwayat Pemasukan — Bulan Ini</h2>
+        <div id="income-history-list"></div>
+      </div>
     </div>
   `;
 
@@ -199,7 +182,8 @@ function renderIncomeCharts(txs, s, month) {
   txs.forEach(t => { catMap[t.category || 'Lainnya'] = (catMap[t.category || 'Lainnya'] || 0) + t.amount; });
   const catLabels = Object.keys(catMap);
   const catVals   = Object.values(catMap);
-  const colors    = ['#34d399','#38bdf8','#fbbf24','#fb923c','#c084fc','#f87171','#a3e635','#f472b6'];
+  const themeC = getThemeColors();
+  const colors = [themeC[0], themeC[1], themeC[2], themeC[3], themeC[4], themeC[5], themeC[0]+'aa', themeC[1]+'aa'];
 
   const donutCtx = $('income-donut-chart');
   if (donutCtx) {
@@ -211,11 +195,18 @@ function renderIncomeCharts(txs, s, month) {
         datasets: [{ data: catVals, backgroundColor: colors.slice(0, catLabels.length), borderWidth: 2, borderColor: 'transparent', hoverOffset: 6 }],
       },
       options: {
-        cutout: '62%',
+        cutout: '65%', responsive: true, maintainAspectRatio: true,
         plugins: {
           legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` } },
+          tooltip: {
+            callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` },
+            backgroundColor: getCSSVar('--bg-elevated'),
+            titleColor: getCSSVar('--text-primary'),
+            bodyColor: getCSSVar('--text-secondary'),
+            borderColor: getCSSVar('--border'), borderWidth: 1,
+          },
         },
+        animation: { animateRotate: true, duration: 700 },
       },
     });
   }
@@ -267,8 +258,8 @@ function renderIncomeCharts(txs, s, month) {
           tooltip: { callbacks: { label: ctx => ` ${fmt(ctx.parsed.y)}` } },
         },
         scales: {
-          x: { ticks: { color: getAxisColor(), maxTicksLimit: 10 }, grid: { color: getGridColor() } },
-          y: { ticks: { color: getAxisColor(), callback: v => fmt(v) }, grid: { color: getGridColor() } },
+          x: { ticks: { color: getAxisColor(), maxTicksLimit: 10 }, grid: { color: getGridColor() }, border:{color:'transparent'} },
+          y: { ticks: { color: getAxisColor(), callback: v => fmt(v) }, grid: { color: getGridColor() }, border:{color:'transparent'} },
         },
       },
     });
