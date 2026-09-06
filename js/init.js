@@ -46,14 +46,18 @@ function initApp() {
   /* ── Topbar logo → dashboard ── */
   $('topbar-logo-btn')?.addEventListener('click', () => navigateTo('dashboard'));
 
-  /* ── Anggaran dropdown (topbar desktop) ── */
-  /* Pakai position:fixed agar tidak ter-clip oleh overflow:hidden di .topbar-nav-wrap */
+  /* ── Anggaran dropdown (topbar desktop) ──
+     Dipindahkan ke <body> langsung agar bebas dari CSS mask & overflow clip
+     yang ada di .topbar-nav-wrap. Position: fixed + koordinat dari JS.       */
   const anggaranBtn  = $('tnav-anggaran');
   const anggaranDrop = $('anggaran-dropdown');
   if (anggaranBtn && anggaranDrop) {
+    // Pindahkan elemen dropdown ke body agar tidak ter-clip mask parent
+    document.body.appendChild(anggaranDrop);
+
     function positionAnggaranDrop() {
       const rect = anggaranBtn.getBoundingClientRect();
-      anggaranDrop.style.top  = (rect.bottom + 8) + 'px';
+      anggaranDrop.style.top  = (rect.bottom + 6) + 'px';
       anggaranDrop.style.left = rect.left + 'px';
     }
 
@@ -70,11 +74,7 @@ function initApp() {
 
     anggaranBtn.addEventListener('click', e => {
       e.stopPropagation();
-      if (anggaranDrop.classList.contains('open')) {
-        closeAnggaranDrop();
-      } else {
-        openAnggaranDrop();
-      }
+      anggaranDrop.classList.contains('open') ? closeAnggaranDrop() : openAnggaranDrop();
     });
 
     anggaranDrop.querySelectorAll('.topbar-dropdown-item[data-page]').forEach(item => {
@@ -85,13 +85,11 @@ function initApp() {
     });
 
     document.addEventListener('click', e => {
-      const wrap = $('anggaran-dropdown-wrap');
-      if (wrap && !wrap.contains(e.target) && !anggaranDrop.contains(e.target)) {
+      if (!anggaranBtn.contains(e.target) && !anggaranDrop.contains(e.target)) {
         closeAnggaranDrop();
       }
     });
 
-    // Reposition on scroll/resize
     window.addEventListener('resize', () => {
       if (anggaranDrop.classList.contains('open')) positionAnggaranDrop();
     }, { passive: true });
