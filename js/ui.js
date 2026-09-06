@@ -101,32 +101,41 @@ function updateSidebarCouple() {
 /* ══════════════════════════════════════════
    NAVIGATION
 ══════════════════════════════════════════ */
+const ANGGARAN_PAGES = ['income','fixed','variable','loan','savings','investments','expense','debt'];
+
 function navigateTo(page) {
   currentPage = page;
+
+  /* Pages */
   $$('.page').forEach(p => p.classList.remove('active'));
   $(`page-${page}`)?.classList.add('active');
+
+  /* Sidebar legacy nav */
   $$('.nav-item').forEach(n => n.classList.remove('active'));
   $(`nav-${page}`)?.classList.add('active');
 
-  const titles = {
-    home:        'Panduan',
-    dashboard:   'Dashboard',
-    transactions:'Transaksi',
-    report:      'Laporan Bulanan',
-    goals:       'Savings Goals',
-    split:       'Split Calculator',
-    income:      'Pemasukan',
-    expense:     'Pengeluaran',
-    savings:     'Tabungan',
-    debt:        'Hutang & Piutang',
-    investments: 'Investasi',
-  };
-  $('topbar-title').textContent = titles[page] || page;
-
-  if (window.innerWidth <= 900) {
-    $('sidebar').classList.remove('open');
-    if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+  /* Topbar tabs */
+  $$('.topbar-tab[data-page]').forEach(t =>
+    t.classList.toggle('active', t.dataset.page === page));
+  const anggaranTab = $('tnav-anggaran');
+  if (anggaranTab) anggaranTab.classList.toggle('active', ANGGARAN_PAGES.includes(page));
+  /* Tutup dropdown */
+  const drop = $('anggaran-dropdown');
+  if (drop) {
+    drop.classList.remove('open');
+    if (anggaranTab) anggaranTab.setAttribute('aria-expanded', 'false');
   }
+
+  /* Bottom nav */
+  $$('.bottom-tab[data-page]').forEach(t =>
+    t.classList.toggle('active', t.dataset.page === page));
+  const bAnggaranTab = $('bnav-anggaran-trigger');
+  if (bAnggaranTab) bAnggaranTab.classList.toggle('active', ANGGARAN_PAGES.includes(page));
+
+  /* Tutup sidebar */
+  $('sidebar')?.classList.remove('open');
+  if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+
   renderPage(page);
 }
 
@@ -142,6 +151,8 @@ function renderPage(page) {
   else if (page === 'savings')      renderSavingsPage();
   else if (page === 'debt')         renderDebtPage();
   else if (page === 'investments')  renderInvestmentsPage();
+  /* Legacy pages dari sidebar lama — redirect ke tab baru */
+  else if (page === 'fixed' || page === 'variable' || page === 'loan') renderExpensePage();
 }
 
 /* ══════════════════════════════════════════
