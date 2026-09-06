@@ -300,52 +300,6 @@ function subscribeRealtime() {
 
 
 /* ══════════════════════════════════════════
-   CSS VAR HELPERS & THEME COLORS
-══════════════════════════════════════════ */
-function getCSSVar(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
-function getThemeColors() {
-  const a  = getCSSVar('--accent');
-  const a2 = getCSSVar('--accent-2');
-  const a3 = getCSSVar('--accent-3');
-  return [
-    a,         // income    → accent utama
-    a2,        // fixed     → accent-2
-    a3,        // variable  → accent-3
-    a + 'cc',  // loan      → accent redup
-    a2 + '99', // savings   → accent-2 muda
-    a3 + 'cc', // investments → accent-3 redup
-  ];
-}
-
-/* ══════════════════════════════════════════
-   STIKER KONDISI KEUANGAN
-   Folder: animasi/drako/ | animasi/yuki/ | animasi/pupi/
-   Ocean = tidak pakai stiker
-══════════════════════════════════════════ */
-const STICKER_FILES = {
-  nodata:    's-sleep.png',
-  welcome:   's-peek.png',
-  celebrate: 's-cheer.png',
-  happy:     's-happy.png',
-  ontrack:   's-ontrack.png',
-  saving:    's-boba.png',
-  warning:   's-confused.png',
-  crisis:    's-cry.png',
-  tired:     's-tired.png',
-};
-
-function getStickerFolder() {
-  const t = state.settings.theme;
-  if (t === 'dark')  return 'animasi/drako';
-  if (t === 'yuki')  return 'animasi/yuki';
-  if (t === 'rose')  return 'animasi/pupi';
-  return null; // ocean = no stiker
-}
-
-/* ══════════════════════════════════════════
    EXPORT / IMPORT
 ══════════════════════════════════════════ */
 function exportData() {
