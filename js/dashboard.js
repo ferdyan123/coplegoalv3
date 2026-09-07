@@ -271,7 +271,7 @@ function renderBarChart() {
         backgroundColor: accent2 + '99', borderColor: accent2, borderWidth: 2, borderRadius: 6, borderSkipped: false },
     ]},
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: true, aspectRatio: 1.8,
       plugins: {
         legend: { labels: { color: axisC, font: { size: 10, family: "'Plus Jakarta Sans'" }, boxWidth: 10, borderRadius: 3 } },
         tooltip: {
