@@ -857,7 +857,6 @@ body {
 
 .chart-card {
   padding: 1.25rem;
-  min-height: 260px;
   display: flex;
   flex-direction: column;
 }
